@@ -8,7 +8,8 @@ import pandas as pd
 import numpy as np
 import sandia
 
-DATA_DIR = Path(r"./test_data")
+PARENT_DIR = Path("__file__").parent.absolute()
+DATA_DIR = Path(PARENT_DIR, "mohca_cl", "test_data")
 
 
 class TestSandia(unittest.TestCase):
