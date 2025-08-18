@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-This is the draft version of PINN_based PV hosting capacity analysis codes.
+This is the second version of PINN_based PV hosting capacity analysis codes.
 
 """
 
@@ -19,7 +19,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, node_number:int, nodes_selected=0, retrain_indicator=0, inverter_control=0, control_setting='var'):
+def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, model_save_filepath:str, node_number:int, nodes_selected:list, retrain_indicator:int, inverter_control:int, control_setting:str):
     """
 
     Parameters
@@ -30,6 +30,8 @@ def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, no
         the file path of the input data.
     output_csv_path : str
         the file path of the output result data.
+    model_save_filepath: str
+        the file path of saved model or for saving new model
     node_number : int
         the customer number.
     nodes_selected : list, optional
@@ -51,7 +53,7 @@ def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, no
     
     def set_device():
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        print('Using device:', device)    
+        #print('Using device:', device)    
         return device
 
     def set_seed(seed: int = 42) -> None:
@@ -228,12 +230,7 @@ def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, no
             v_base = 240
         V_base.append(v_base)
 
-    V = V / V_base
-    
-    pd.DataFrame(PQ).to_csv('PQ_EC2_tttt.csv', header=None)
-    pd.DataFrame(V).to_csv('V_EC2_tttt.csv', header=None)
-    
-    #V = V / v_base # convert to Per Unit Value
+    V = V / V_base # convert to Per Unit Value
     V = np.power(V, 2)
     
     
@@ -263,8 +260,8 @@ def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, no
     if retrain_indicator==0:
         
         try:
-            model_name = testing_system_name + '.pt'
-            #print(model_name)
+            #model_name = testing_system_name + '.pt'
+            model_name = model_save_filepath
             model.load_state_dict(torch.load(model_name))
         except:
             
@@ -272,7 +269,8 @@ def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, no
             print('Please correct system name or retrain model...')
             sys.exit()
 
-        model_name = testing_system_name + '.pt'
+        #model_name = testing_system_name + '.pt'
+        model_name = model_save_filepath
         model.load_state_dict(torch.load(model_name))
    
         
@@ -345,7 +343,6 @@ def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, no
                     keep_positive = torch.abs(-model.A.weight.sum() - torch.norm(model.A.weight, 1)) + torch.abs(-model.B.weight.sum() - torch.norm(model.B.weight, 1))
         
                     regularization_loss = Beta*( A_weight + 0.00*A_w + B_weight + 0.00*B_w + 0.1*error_comp + 0*voltage_influence + 0.1*keep_positive)
-                    # regularization_loss = Beta*( A_weight + B_weight + 0.1*error_comp ++ 0.1*keep_positive)
                     regularization_loss = regularization_loss.cpu()
         
                 elif regularization_type == 'No':
@@ -395,8 +392,6 @@ def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, no
             voltage_matrix_actual= np.power(np.array(actual_test_results).reshape(-1, node_number), 0.5)
             voltage_matrix_predeict= np.power(np.array(predict_test_results).reshape(-1, node_number), 0.5)
             
-            np.save('Ck5_actual.npy', voltage_matrix_actual)
-            np.save('Ck5_predict.npy', voltage_matrix_predeict)
             
             MAE_customer = abs(voltage_matrix_actual - voltage_matrix_predeict).mean()
             
@@ -405,8 +400,8 @@ def PINN_HC(testing_system_name:str, input_csv_path:str, output_csv_path:str, no
                 sys.exit()
 
         
-        filepath = testing_system_name + '.pt'
-        torch.save(model.state_dict(), filepath)  
+        #filepath = testing_system_name + '.pt'
+        torch.save(model.state_dict(), model_save_filepath)  
     
 
     # ********************************************************************************
