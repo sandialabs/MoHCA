@@ -559,8 +559,4 @@ def reactive_power_generation(mode_control, PV_Gen_P, voltage, PV_installed):
 
     return Q_gen, P_gen
 
-#%%
-#Q_gen, P_gen_actual = reactive_power_generation('constant power factor', 0.8, 9999, 1)
-#print(Q_gen)
-
 
