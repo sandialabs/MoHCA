@@ -116,15 +116,15 @@ def init_cli():
   sandiaTCHC_parser.set_defaults(func=sandiaTCHC)
   #isu_transformerCustMapping
   isu_transcustmapping_parser = subparsers.add_parser('isu_transformerCustMapping')
-  isu_transcustmapping_parser.add_argument('input_meter_data_fp')
-  isu_transcustmapping_parser.add_argument('grouping_output_fp')
-  isu_transcustmapping_parser.add_argument('minimum_xfmr_n', default=None)
-  isu_transcustmapping_parser.add_argument('fmr_n_is_exact,', default=False)
+  isu_transcustmapping_parser.add_argument('input_meter_data_fp', help="input file path")
+  isu_transcustmapping_parser.add_argument('grouping_output_fp', help="output file path")
+  isu_transcustmapping_parser.add_argument('minimum_xfmr_n', type=int, default=None, help="Minimum transformer num")
+  isu_transcustmapping_parser.add_argument('fmr_n_is_exact,', type=bool, default=False, help="Bool - Transformer number exact")
   isu_transcustmapping_parser.add_argument('bus_coords_fp', default=None)
   isu_transcustmapping_parser.set_defaults(func=isu_transformerCustMapping)
   #iastate
   iastate_parser = subparsers.add_parser('iastate')
-  iastate_parser.add_argument('in_path')
+  iastate_parser.add_argument('in_path', help="input .csv")
   iastate_parser.add_argument('out_path')
   iastate_parser.set_defaults(func=iastate)
 
