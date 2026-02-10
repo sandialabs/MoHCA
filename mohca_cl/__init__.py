@@ -7,7 +7,7 @@ from . import transformer_customer_mapping_isu
 import argparse
 import os
 from pathlib import Path
-from unittest import TestLoader, TestResult
+import unittest
 
 mohca_dir = Path(__file__).parent
 
@@ -60,23 +60,10 @@ def run_all_tests():
 
   PROJ_ROOT = Path("__file__").parent.absolute()
 
-  testLoader = TestLoader()
-  testResult = TestResult()
+  testLoader = unittest.TestLoader()
   testSuite = testLoader.discover(start_dir=str( str(PROJ_ROOT) + "/mohca_cl"), pattern='test_*.py')
-  testSuite.run(result=testResult)
-  errors = testResult.errors
-  failures = testResult.failures
-  skipped = testResult.skipped
-  if testResult.testsRun != 17:
-    print("Error: 17 tests are supposed to run")
-  if testResult.wasSuccessful() == False:
-    print("Error In Tests - not successful")
-    for error in errors:
-      print(error)
-    for fail in failures:
-      print(fail)
-    for skip in skipped:
-      print(skip)
+  runner = unittest.TextTestRunner(verbosity=2)
+  runner.run(testSuite)
 
 def init_cli():
   # Main Parser

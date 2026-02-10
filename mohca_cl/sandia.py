@@ -54,7 +54,9 @@ def hosting_cap(
     """
 
     # logging Setup
-    logging.basicConfig(filename=Path(input_csv_path).parent.absolute() / 'mohca_sandia.log',
+    logfile = Path( Path(input_csv_path).parent.absolute(), 'mohca_sandia.log' )
+    logfile.touch()
+    logging.basicConfig(filename=logfile,
         encoding="utf-8",
         level=logging.DEBUG,
         format='%(asctime)s - %(levelname)s - %(message)s')

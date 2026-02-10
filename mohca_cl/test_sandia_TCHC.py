@@ -22,7 +22,7 @@ class TestSandiaTCHC(unittest.TestCase):
         super().__init__(methodName)
         # inputs
         self.hv_input_fp = DATA_DIR / 'ST_input_meter_data.csv'  # higher v
-        self.isu_input_fp = DATA_DIR / 'ST_Input_ISU.csv'  # temp...
+        self.isu_input_fp = DATA_DIR / 'ST_PINN_Input_ISU.csv'  # temp...
         # optional inputs
         self.optional_bus_coords_1 = DATA_DIR / "ST_optional_bus_coords.csv"
 
