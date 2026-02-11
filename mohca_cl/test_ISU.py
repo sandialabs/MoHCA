@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import ISU_PINNbasedHCA
+from pathlib import Path
 
 def iastate(input_csv_path, output_csv_path, model_save_filepath):
   ''' Execute ISU hosting capacity algorithm on in_path CSV with output written as CSV to out_path. '''
@@ -16,7 +17,9 @@ def iastate(input_csv_path, output_csv_path, model_save_filepath):
   return ret_value
 
 
-input_csv_path  = r'.\test_data\ST_Example_Files\ST_PINN_Input_ISU.csv'  
-output_csv_path = r'.\test_data\ST_Example_Files\output\ST_PINN_0.95pf.csv'  
-model_path      = r'.\test_data\ST_Example_Files\ST_PINN_model.pt'
+PARENT_DIR = Path("__file__").parent
+DATA_DIR = Path(PARENT_DIR, "mohca_cl", "test_data", "ST_Example_Files")
+input_csv_path = Path(DATA_DIR, 'ST_PINN_Input_ISU.csv')
+output_csv_path = Path(DATA_DIR, 'output','ST_PINN_0.95pf.csv')
+model_path = Path(DATA_DIR, 'ST_PINN_model.pt')
 ret_value = iastate(input_csv_path, output_csv_path, model_path)
